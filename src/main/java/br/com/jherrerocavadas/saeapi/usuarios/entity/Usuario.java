@@ -2,6 +2,7 @@ package br.com.jherrerocavadas.saeapi.usuarios.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,8 +10,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-
-@Table(schema = "${database_name")
+@Builder
 public class Usuario {
 
 
@@ -21,6 +21,8 @@ public class Usuario {
     private String login;
     private String senha;
     private String email;
+
+    @Column(columnDefinition = "TINYINT")
     private Integer tipoUsuario; // ALUNO, PROFESSOR, SECRETARIA/ADMINISTRATIVO
 
     private byte[] fotoUsuario;

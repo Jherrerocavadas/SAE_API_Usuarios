@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -96,7 +95,7 @@ public class DocumentoProntuarioAPI {
 
 //        Optional<Usuario> usuario = usuarioRepository.findById(numMatriculaUsuario);
         if(usuario.isEmpty()){
-           return ResponseEntity.status(404).body("Usuário não encontrado para a matrícula informada");
+            return ResponseEntity.status(404).body("Usuário não encontrado para a matrícula informada");
         }
 
         DocumentosProntuario documentoProntuario = documentosProntuarioService.documentoToDocumentoProntuario(arquivo);
@@ -166,18 +165,7 @@ public class DocumentoProntuarioAPI {
     })
     @GetMapping("/documentos/{id}")
     public ResponseEntity<?> baixarDocumento(@PathVariable Long id){
-
-
-        Optional<DocumentosProntuario> optionalDocumentosProntuario = documentosProntuarioRepository.findById(id);
-
-        if(optionalDocumentosProntuario.isPresent()){
-            DocumentosProntuario documentoProntuario = optionalDocumentosProntuario.get();
-            return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-                            "attachment; filename=\"" + documentoProntuario.getNomeDocumento() + "\"")
-                    .body(documentoProntuario.getDocumento());
-        }
-
-        return ResponseEntity.status(404).body("Não foi encontrado o arquivo com o id informado.");
+        return documentosProntuarioService.baixarDocumento(id);
     }
 
 

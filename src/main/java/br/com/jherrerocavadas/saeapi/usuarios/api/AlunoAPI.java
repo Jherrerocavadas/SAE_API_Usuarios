@@ -4,6 +4,7 @@ import br.com.jherrerocavadas.saeapi.usuarios.dto.AlunoDTO;
 import br.com.jherrerocavadas.saeapi.usuarios.entity.Aluno;
 import br.com.jherrerocavadas.saeapi.usuarios.repository.AlunoRepository;
 import br.com.jherrerocavadas.saeapi.usuarios.services.AlunoService;
+import br.com.jherrerocavadas.saeapi.usuarios.services.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -12,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -26,10 +25,13 @@ public class AlunoAPI {
 
     private final AlunoService alunoService;
 
+    private final UsuarioService usuarioService;
+
     @Autowired
-    private AlunoAPI(AlunoRepository alunoRepository, AlunoService alunoService){
+    private AlunoAPI(AlunoRepository alunoRepository, AlunoService alunoService, UsuarioService usuarioService){
         this.alunoRepository = alunoRepository;
         this.alunoService = alunoService;
+        this.usuarioService = usuarioService;
     }
 
     @Operation(summary =  "Verificar o serviço de disciplinas de um aluno")
@@ -51,16 +53,10 @@ public class AlunoAPI {
             @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção"),
     })
     @PostMapping("/alunos/aluno/{numUsuario}")
-    public ResponseEntity<Aluno> cadastrarAlunoParaUsuario(
-            @RequestBody AlunoDTO alunoDTO,
-            @PathVariable("numUsuario") Long numUsuario){
+    public ResponseEntity<Aluno> cadastrarAlunoParaUsuario(@RequestBody AlunoDTO alunoDTO,
+                                                           @PathVariable("numUsuario") Long numUsuario){
 
-        Aluno aluno = alunoService.alunoDtoToAluno(alunoDTO);
-        aluno = alunoService.relacionarAlunoPorNumUsuario(numUsuario, aluno);
-
-        aluno = alunoRepository.save(aluno); //Atualizar a entidade do aluno com o número da matrícula atribuido
-
-        return ResponseEntity.ok(aluno);
+        return ResponseEntity.ok(usuarioService.cadastrarAlunoPorUsuario(alunoDTO, numUsuario));
 
     }
 

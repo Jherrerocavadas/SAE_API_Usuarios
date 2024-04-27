@@ -1,6 +1,9 @@
 package br.com.jherrerocavadas.saeapi.usuarios.services;
 
+import br.com.jherrerocavadas.saeapi.usuarios.dto.AlunoDTO;
+import br.com.jherrerocavadas.saeapi.usuarios.dto.AlunoResponseDTO;
 import br.com.jherrerocavadas.saeapi.usuarios.dto.UsuarioDTO;
+import br.com.jherrerocavadas.saeapi.usuarios.entity.Aluno;
 import br.com.jherrerocavadas.saeapi.usuarios.entity.Usuario;
 import br.com.jherrerocavadas.saeapi.usuarios.enums.TipoUsuario;
 import br.com.jherrerocavadas.saeapi.usuarios.repository.AlunoRepository;
@@ -22,6 +25,8 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
 
     private final AlunoRepository alunoRepository;
+
+    private final AlunoService alunoService;
     private final ProfessorRepository professorRepository;
 
 
@@ -64,8 +69,20 @@ public class UsuarioService {
 
     }
 
-    public Boolean autenticar(UsuarioDTO usuarioDTO) {
+    public Aluno cadastrarAlunoPorUsuario(AlunoDTO alunoDTO, Long numUsuario){
+        Aluno aluno = alunoService.alunoDtoToAluno(alunoDTO);
+        Optional<Usuario> usuarioOptional = this.findUsuarioByNumUsuario(numUsuario);
 
+        if(usuarioOptional.isPresent()){
+            aluno.setUsuario(usuarioOptional.get());
+        }
+        aluno = alunoRepository.save(aluno); //Atualizar a entidade do aluno com o número da matrícula atribuido
+        return aluno;
+    }
+
+
+    public Usuario autenticarUsuario(UsuarioDTO usuarioDTO) {
+        System.out.printf("usuarioDTO é: %s %n", usuarioDTO);
         Usuario usuario = usuarioRepository.findByLoginAndSenha(usuarioDTO.getLogin(), usuarioDTO.getSenha());
 
         return Objects.nonNull(usuario);
@@ -102,6 +119,11 @@ public class UsuarioService {
 
         return usuarioRepository.findById(numUsuario);
     }
+
+    public void salvarUsuario(UsuarioDTO usuarioDTO) {
+        usuarioRepository.save(this.usuarioDtoToUsuario(usuarioDTO));
+    }
+
     public String inserirFotoUsuario(MultipartFile fotoUsuario, Long numUsuario) {
         Optional<Usuario> usuarioOptional = this.findUsuarioByNumUsuario(numUsuario);
         if(usuarioOptional.isPresent()){

@@ -114,7 +114,8 @@ public class UsuarioAPI {
     @PostMapping("/usuario")
     public void salvarUsuario(@RequestBody UsuarioDTO usuarioDTO){
 
-        usuarioRepository.save(usuarioService.usuarioDtoToUsuario(usuarioDTO));
+        usuarioService.salvarUsuario(usuarioDTO);
+
     }
 
 

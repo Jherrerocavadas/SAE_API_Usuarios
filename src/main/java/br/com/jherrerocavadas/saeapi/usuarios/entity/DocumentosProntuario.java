@@ -21,7 +21,7 @@ public class DocumentosProntuario {
     private Long id;
     private String tipoDocumento; //OK: Colocar tipo de documento
     private String nomeDocumento;
-    private byte[] documento;
+    private String documento;
     private String extensaoDocumento;
 
     @ManyToOne(cascade = CascadeType.DETACH)
