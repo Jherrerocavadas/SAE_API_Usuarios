@@ -1,8 +1,10 @@
 package br.com.jherrerocavadas.saeapi.usuarios.entity;
 
+import br.com.jherrerocavadas.saeapi.usuarios.entity.dependencies.Curso;
 import br.com.jherrerocavadas.saeapi.usuarios.entity.dependencies.Faculdade;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
+@Builder
 
 public class Aluno{
 
@@ -36,9 +39,15 @@ public class Aluno{
     private Usuario usuario;
 
     @ManyToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "faculdadeid", referencedColumnName = "id",
+    @JoinColumn(name = "faculdadeId", referencedColumnName = "id",
             foreignKey = @ForeignKey(name = "UK_ALUNO_FACULDADE", value = ConstraintMode.CONSTRAINT))
     private Faculdade faculdade;
+
+
+    @ManyToOne(cascade = CascadeType.DETACH)
+    @JoinColumn(name = "cursoId", referencedColumnName = "id",
+            foreignKey = @ForeignKey(name = "UK_ALUNO_CURSO", value = ConstraintMode.CONSTRAINT))
+    private Curso curso;
 
 
 }

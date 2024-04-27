@@ -1,9 +1,14 @@
 package br.com.jherrerocavadas.saeapi.usuarios.dto;
 
-import br.com.jherrerocavadas.saeapi.usuarios.dto.dependenciesDTO.FaculdadeDTO;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class AlunoDTO {
 
     private Long numMatricula;
@@ -15,4 +20,6 @@ public class AlunoDTO {
     private Integer semestre;
 
     private Long faculdadeId;
+
+    private Long cursoId;
 }
