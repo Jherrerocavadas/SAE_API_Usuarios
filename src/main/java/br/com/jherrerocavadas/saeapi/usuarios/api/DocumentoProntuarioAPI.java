@@ -75,7 +75,7 @@ public class DocumentoProntuarioAPI {
             @PathVariable("numMatricula") Long numMatricula, //Pode ser RA aluno ou matricula professor
             @RequestParam("arquivo") MultipartFile arquivo){
 
-        Optional<Usuario> usuario = Optional.of(null);
+        Optional<Usuario> usuario = Optional.ofNullable(null);
         //Buscar os dados de aluno ou professor, do tipo de usuario
 
         if(tipoUsuario.equals("aluno")){
