@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -32,10 +31,11 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioService(UsuarioRepository usuarioRepository,
-                       AlunoRepository alunoRepository,
-                       ProfessorRepository professorRepository) {
+                           AlunoRepository alunoRepository,
+                           AlunoService alunoService, ProfessorRepository professorRepository) {
         this.usuarioRepository = usuarioRepository;
         this.alunoRepository = alunoRepository;
+        this.alunoService = alunoService;
         this.professorRepository = professorRepository;
     }
 
@@ -84,11 +84,20 @@ public class UsuarioService {
     public Usuario autenticarUsuario(UsuarioDTO usuarioDTO) {
         System.out.printf("usuarioDTO é: %s %n", usuarioDTO);
         Usuario usuario = usuarioRepository.findByLoginAndSenha(usuarioDTO.getLogin(), usuarioDTO.getSenha());
+        System.out.printf("usuario é: %s %n", usuario);
+        return usuario;
+    }
 
-        return Objects.nonNull(usuario);
+    public AlunoResponseDTO autenticarAluno(UsuarioDTO usuarioDTO) {
+        Aluno aluno = alunoRepository.findAlunoByUsuario(this.autenticarUsuario(usuarioDTO));
+        aluno.getUsuario().setSenha("");
+        return alunoService.toAlunoResponse(aluno, this);
 
 
-
+    }
+    public Object autenticarProfessor(UsuarioDTO usuarioDTO) {
+        //TODO: gerar autenticação do professor
+        return true;
     }
 
     public Usuario usuarioDtoToUsuario(UsuarioDTO usuarioDTO) {

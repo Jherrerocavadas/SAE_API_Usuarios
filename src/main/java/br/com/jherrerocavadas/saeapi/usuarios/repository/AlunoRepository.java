@@ -9,8 +9,9 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface AlunoRepository extends JpaRepository<Aluno, Long> {
-    Optional<Usuario> findUsuarioByNumMatricula(Long numMatriculaUsuario);
 
     @Query("SELECT AL.usuario from Aluno AL where AL.numMatricula = :numMatricula")
     Optional<Usuario> findUsuarioByNumMatricula(@Param("numMatricula") Long numMatriculaUsuario);
+
+    Aluno findAlunoByUsuario(Usuario usuario);
 }

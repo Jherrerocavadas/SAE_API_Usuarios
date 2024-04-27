@@ -2,6 +2,7 @@ package br.com.jherrerocavadas.saeapi.usuarios.api;
 
 import br.com.jherrerocavadas.saeapi.usuarios.dto.UsuarioDTO;
 import br.com.jherrerocavadas.saeapi.usuarios.entity.Usuario;
+import br.com.jherrerocavadas.saeapi.usuarios.enums.TipoUsuario;
 import br.com.jherrerocavadas.saeapi.usuarios.repository.AlunoRepository;
 import br.com.jherrerocavadas.saeapi.usuarios.repository.ProfessorRepository;
 import br.com.jherrerocavadas.saeapi.usuarios.repository.UsuarioRepository;
@@ -97,11 +98,17 @@ public class UsuarioAPI {
             @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção"),
     })
     @PostMapping("/usuarios/autenticar")
-    public ResponseEntity<Boolean> retornarUsuarioPorTipoELogin(@RequestBody UsuarioDTO usuarioDTO){
+    public ResponseEntity<Object> autenticarAluno(@RequestBody UsuarioDTO usuarioDTO){
+        if(usuarioDTO.getTipoUsuario().equals(TipoUsuario.ALUNO)){
+            return ResponseEntity.accepted().body(usuarioService.autenticarAluno(usuarioDTO));
+        }
 
-        return ResponseEntity.accepted().body(usuarioService.autenticar(usuarioDTO));
+        else if(usuarioDTO.getTipoUsuario().equals(TipoUsuario.PROFESSOR)){
+            return ResponseEntity.accepted().body(usuarioService.autenticarProfessor(usuarioDTO));
+        }
+
+        return ResponseEntity.notFound().build();
     }
-
 
 
     @Operation(summary =  "Cadastrar um novo usuário")
