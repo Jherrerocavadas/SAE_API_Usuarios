@@ -8,7 +8,9 @@ import br.com.jherrerocavadas.saeapi.usuarios.repository.ProfessorRepository;
 import br.com.jherrerocavadas.saeapi.usuarios.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -99,5 +101,21 @@ public class UsuarioService {
     public Optional<Usuario> findUsuarioByNumUsuario(Long numUsuario) {
 
         return usuarioRepository.findById(numUsuario);
+    }
+    public String inserirFotoUsuario(MultipartFile fotoUsuario, Long numUsuario) {
+        Optional<Usuario> usuarioOptional = this.findUsuarioByNumUsuario(numUsuario);
+        if(usuarioOptional.isPresent()){
+            Usuario usuario = usuarioOptional.get();
+
+            try {
+                usuario.setFotoUsuario(fotoUsuario.getBytes());
+                usuarioRepository.save(usuario);
+                return usuario.getFotoUsuario().toString();
+            } catch (IOException e) {
+                throw new RuntimeException("Erro ao fazer o encode do base64 da foto do usuário");
+            }
+
+        }
+        return "Sem foto, amigo";
     }
 }

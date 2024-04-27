@@ -11,8 +11,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
@@ -116,6 +118,21 @@ public class UsuarioAPI {
     }
 
 
+    @Operation(summary =  "Enviar uma foto de perfil do usuário")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description =  "Foto enviada"),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida"),
+            @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+            @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção"),
+    })
+    @PostMapping(path = "/usuario/{numUsuario}/foto",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Object> enviarFoto(@PathVariable("numUsuario") Long numUsuario,
+                                             @RequestParam("fotoUsuario") MultipartFile fotoUsuario){
+
+        return ResponseEntity.ok(usuarioService.inserirFotoUsuario(fotoUsuario, numUsuario));
+
+    }
 
 
     @Operation(summary =  "Editar uma usuário existente")

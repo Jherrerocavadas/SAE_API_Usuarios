@@ -23,5 +23,7 @@ public class Usuario {
     private String email;
     private Integer tipoUsuario; // ALUNO, PROFESSOR, SECRETARIA/ADMINISTRATIVO
 
+    private byte[] fotoUsuario;
+
 
 }
