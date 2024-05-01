@@ -83,197 +83,26 @@ public class DisciplinaAlunoAPI {
 
 
 
-    @Operation(summary =  "Retornar todos os alunos que possuem cadastro em determinada disciplina")
+    @Operation(summary =  "Retornar todas as disciplinas de determinado aluno baseado nos filtros fornecidos")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description =  "Lista retornada"),
             @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
             @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção"),
     })
-    @GetMapping("/disciplinasAlunos/aluno/{nomeAluno}")
-    //Curso
-    //Disciplina
+    @GetMapping("/disciplinasAlunos/aluno/{numeroMatricula}")
     //Aluno com disciplina cursando ou terminada?
-    public List<DisciplinaAlunoDTO> retornarDisciplinaPorAluno(){
-        //        List<DisciplinaCurso> disciplinasPorCurso = disciplinaCursoRepository.findAll();
-        List<DisciplinaAlunoDTO> disciplinaAlunoDTO = new ArrayList<>();
-//        for (DisciplinaCurso disciplinaCurso: disciplinasPorCurso) {
-//            DisciplinaCursoDTO disciplinaCursoDTO = new DisciplinaCursoDTO();
-//            List<HorarioAula> horasAula = new ArrayList<>();
-//            List<DiaSemana> diasAula = new ArrayList<>();
-//
-//            horasAula.add(disciplinaCurso.getHoraAula1());
-//            horasAula.add(disciplinaCurso.getHoraAula2());
-//            horasAula.add(disciplinaCurso.getHoraAula3());
-//            horasAula.add(disciplinaCurso.getHoraAula4());
-//
-//            diasAula.add(disciplinaCurso.getDiaDeAula1());
-//            diasAula.add(disciplinaCurso.getDiaDeAula2());
-//
-//            disciplinaCursoDTO.setId(disciplinaCurso.getId());
-//            disciplinaCursoDTO.setDisciplina(disciplinaCurso.getDisciplina());
-//            disciplinaCursoDTO.setFaculdade(disciplinaCurso.getFaculdade());
-//            disciplinaCursoDTO.setSemestre(disciplinaCurso.getSemestre());
-//            disciplinaCursoDTO.setCurso(disciplinaCurso.getCurso());
-//            disciplinaCursoDTO.setHorasAula(horasAula);
-//            disciplinaCursoDTO.setDiasDeAula(diasAula);
-//
-//            disciplinasCursoDTO.add(disciplinaCursoDTO);
-//        }
-        return disciplinaAlunoDTO;
+    public List<DisciplinaAlunoDTO> retornarDisciplinaPorAluno(@PathVariable("numeroMatricula") Long numeroMatricula,
+                                                               @RequestParam(value = "alunoConcluiu", required = false) Boolean isCursada,
+                                                               @RequestParam(value = "alunoDispensado", required = false) Boolean isDispensado){
+
+        List<DisciplinaAlunoDTO> disciplinaAlunoDTOList = new ArrayList<>();
+        List<DisciplinaAluno> disciplinaAlunoList = disciplinaAlunoService.findAlunosInDisciplinaAlunoByFilters(null, null, isCursada, isDispensado, numeroMatricula);
+        for (DisciplinaAluno disciplinaAluno: disciplinaAlunoList) {
+            DisciplinaAlunoDTO disciplinaAlunoDTO = disciplinaAlunoService.disciplinaAlunoToDisciplinaAlunoDto(disciplinaAluno);
+            disciplinaAlunoDTOList.add(disciplinaAlunoDTO);
+        }
+        return disciplinaAlunoDTOList;
     }
-
-
-//    @Operation(summary =  "Retornar todas as disciplinas de registradas para determinado nome de curso")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description =  "Disciplinas do curso retornadas"),
-//            @ApiResponse(responseCode = "400", description = "Requisição inválida"),
-//            @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
-//            @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção"),
-//    })
-//    @GetMapping("/disciplinasCursos/cursos/{nomeCurso}")
-//    public ResponseEntity<List<DisciplinaCursoDTO>> retornarDisciplinaCursoPorNomeCurso(@PathVariable String nomeCurso){
-//        List<DisciplinaCurso> disciplinasPorCurso = disciplinaCursoRepository.getDisciplinaCursoByCursoNomeCurso(nomeCurso);
-//        List<DisciplinaCursoDTO> disciplinasCursoDTO = new ArrayList<>();
-//        if(Objects.nonNull(disciplinasPorCurso)){
-//
-//            for (DisciplinaCurso disciplinaCurso: disciplinasPorCurso) {
-//                DisciplinaCursoDTO disciplinaCursoDTO = new DisciplinaCursoDTO();
-//                List<HorarioAula> horasAula = new ArrayList<>();
-//                List<DiaSemana> diasAula = new ArrayList<>();
-//
-//                horasAula.add(disciplinaCurso.getHoraAula1());
-//                horasAula.add(disciplinaCurso.getHoraAula2());
-//
-//                if(Objects.nonNull(disciplinaCurso.getHoraAula3()) && Objects.nonNull(disciplinaCurso.getHoraAula4())){
-//                    horasAula.add(disciplinaCurso.getHoraAula3());
-//                    horasAula.add(disciplinaCurso.getHoraAula4());
-//                }
-//
-//                diasAula.add(disciplinaCurso.getDiaDeAula1());
-//                if(Objects.nonNull(disciplinaCurso.getDiaDeAula2())){
-//                    diasAula.add(disciplinaCurso.getDiaDeAula2());
-//                }
-//
-//
-//                disciplinaCursoDTO.setId(disciplinaCurso.getId());
-//                disciplinaCursoDTO.setDisciplina(disciplinaCurso.getDisciplina());
-//                disciplinaCursoDTO.setFaculdade(disciplinaCurso.getFaculdade());
-//                disciplinaCursoDTO.setSemestre(disciplinaCurso.getSemestre());
-//                disciplinaCursoDTO.setCurso(disciplinaCurso.getCurso());
-//                disciplinaCursoDTO.setHorasAula(horasAula);
-//                disciplinaCursoDTO.setDiasDeAula(diasAula);
-//
-//                disciplinasCursoDTO.add(disciplinaCursoDTO);
-//            }
-//
-//
-//
-//            return ResponseEntity.ok(disciplinasCursoDTO);
-//        }
-//        else{
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
-
-//
-//    @Operation(summary =  "Retornar todas as disciplinas de registradas para determinado curso (pesquisa por sigla do curso)")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description =  "Disciplinas do curso retornadas"),
-//            @ApiResponse(responseCode = "400", description = "Requisição inválida"),
-//            @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
-//            @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção"),
-//    })
-//    @GetMapping("/disciplinasCursos/cursos")
-//    public ResponseEntity<List<DisciplinaCursoDTO>> retornarDisciplinaCursoPorSiglaCurso(@Param("siglaCurso") String siglaCurso){
-//        List<DisciplinaCurso> disciplinasPorCurso = disciplinaCursoRepository.getDisciplinaCursoByCursoSiglaCurso(siglaCurso);
-//        List<DisciplinaCursoDTO> disciplinasCursoDTO = new ArrayList<>();
-//        if(Objects.nonNull(disciplinasPorCurso)){
-//
-//            for (DisciplinaCurso disciplinaCurso: disciplinasPorCurso) {
-//                DisciplinaCursoDTO disciplinaCursoDTO = new DisciplinaCursoDTO();
-//                List<HorarioAula> horasAula = new ArrayList<>();
-//                List<DiaSemana> diasAula = new ArrayList<>();
-//
-//                horasAula.add(disciplinaCurso.getHoraAula1());
-//                horasAula.add(disciplinaCurso.getHoraAula2());
-//
-//                if(Objects.nonNull(disciplinaCurso.getHoraAula3()) && Objects.nonNull(disciplinaCurso.getHoraAula4())){
-//                    horasAula.add(disciplinaCurso.getHoraAula3());
-//                    horasAula.add(disciplinaCurso.getHoraAula4());
-//                }
-//
-//                diasAula.add(disciplinaCurso.getDiaDeAula1());
-//                if(Objects.nonNull(disciplinaCurso.getDiaDeAula2())){
-//                    diasAula.add(disciplinaCurso.getDiaDeAula2());
-//                }
-//
-//
-//                disciplinaCursoDTO.setId(disciplinaCurso.getId());
-//                disciplinaCursoDTO.setDisciplina(disciplinaCurso.getDisciplina());
-//                disciplinaCursoDTO.setFaculdade(disciplinaCurso.getFaculdade());
-//                disciplinaCursoDTO.setSemestre(disciplinaCurso.getSemestre());
-//                disciplinaCursoDTO.setCurso(disciplinaCurso.getCurso());
-//                disciplinaCursoDTO.setHorasAula(horasAula);
-//                disciplinaCursoDTO.setDiasDeAula(diasAula);
-//
-//                disciplinasCursoDTO.add(disciplinaCursoDTO);
-//            }
-//
-//
-//
-//            return ResponseEntity.ok(disciplinasCursoDTO);
-//        }
-//        else{
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
-
-//    @Operation(summary =  "Retornar todas as disciplinas de registradas para determinado curso (pesquisa por sigla do curso)")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description =  "Disciplinas do curso retornadas"),
-//            @ApiResponse(responseCode = "400", description = "Requisição inválida"),
-//            @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
-//            @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção"),
-//    })
-//    @GetMapping("/disciplinasCursos/cursos/teste")
-//    public ResponseEntity<List<DisciplinaCursoDTO>> retornarTeste(@Param("siglaCurso") String siglaCurso, @Param("codFaculdade") String codFaculdade){
-//        List<DisciplinaCurso> disciplinasPorCurso = disciplinaCursoRepository.getDisciplinaCursoByCursoSiglaCursoAndFaculdadeCodFaculdade(siglaCurso, codFaculdade);
-//        List<DisciplinaCursoDTO> disciplinasCursoDTO = new ArrayList<>();
-//        if(Objects.nonNull(disciplinasPorCurso)){
-//
-//            for (DisciplinaCurso disciplinaCurso: disciplinasPorCurso) {
-//                DisciplinaCursoDTO disciplinaCursoDTO = new DisciplinaCursoDTO();
-//                List<HorarioAula> horasAula = new ArrayList<>();
-//                List<DiaSemana> diasAula = new ArrayList<>();
-//
-//                horasAula.add(disciplinaCurso.getHoraAula1());
-//                horasAula.add(disciplinaCurso.getHoraAula2());
-//                horasAula.add(disciplinaCurso.getHoraAula3());
-//                horasAula.add(disciplinaCurso.getHoraAula4());
-//
-//                diasAula.add(disciplinaCurso.getDiaDeAula1());
-//                diasAula.add(disciplinaCurso.getDiaDeAula2());
-//
-//                disciplinaCursoDTO.setId(disciplinaCurso.getId());
-//                disciplinaCursoDTO.setDisciplina(disciplinaCurso.getDisciplina());
-//                disciplinaCursoDTO.setFaculdade(disciplinaCurso.getFaculdade());
-//                disciplinaCursoDTO.setSemestre(disciplinaCurso.getSemestre());
-//                disciplinaCursoDTO.setCurso(disciplinaCurso.getCurso());
-//                disciplinaCursoDTO.setHorasAula(horasAula);
-//                disciplinaCursoDTO.setDiasDeAula(diasAula);
-//
-//                disciplinasCursoDTO.add(disciplinaCursoDTO);
-//            }
-//
-//
-//
-//            return ResponseEntity.ok(disciplinasCursoDTO);
-//        }
-//        else{
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
-
 
 
     @Operation(summary =  "Cadastrar um nova relação disciplina-aluno")
