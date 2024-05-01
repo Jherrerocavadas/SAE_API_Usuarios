@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,7 +65,7 @@ public class UsuarioService {
         usuarioDTO.setNumUsuario(usuario.getNumUsuario());
         usuarioDTO.setSenha(usuario.getSenha());
         usuarioDTO.setTipoUsuario(TipoUsuario.tipoUsuarioByCodUsuario(usuario.getTipoUsuario()));
-
+        usuarioDTO.setFotoUsuario(Base64.getEncoder().encodeToString(usuario.getFotoUsuario()));
         return usuarioDTO;
 
     }
@@ -110,7 +111,7 @@ public class UsuarioService {
 //        usuario.setNumMatricula(usuarioDTO.getNumMatricula());
         usuario.setSenha(usuarioDTO.getSenha());
         usuario.setTipoUsuario(usuarioDTO.getTipoUsuario().getCodTipo());
-
+        usuario.setFotoUsuario(usuarioDTO.getFotoUsuario().getBytes());
         return usuario;
     }
 
