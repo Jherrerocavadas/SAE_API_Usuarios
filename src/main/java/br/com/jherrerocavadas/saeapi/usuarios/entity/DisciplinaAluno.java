@@ -35,5 +35,5 @@ public class DisciplinaAluno {
     private boolean isCursada;
 
     @Nullable
-    private boolean isDispensado;
+    private boolean isDispensada;
 }

@@ -18,9 +18,11 @@ public interface DisciplinaAlunoRepository extends JpaRepository<DisciplinaAluno
             "AND(:#{#disciplina} IS NULL OR (DC.disciplina.codDisciplina LIKE %:disciplina% OR" +
             " DC.disciplina.nomeDisciplina LIKE %:disciplina% OR DC.disciplina.siglaDisciplina LIKE %:disciplina%)) " +
             "AND(:#{#isCursada} IS NULL OR DA.isCursada = :isCursada) " +
-            "AND(:#{#isDispensado} IS NULL OR DA.isDispensado = :isDispensado) ")
+            "AND(:#{#isDispensada} IS NULL OR DA.isDispensada = :isDispensada)" +
+            "AND(:#{#numMatricula} IS NULL OR AL.numMatricula = :numMatricula)")
     List<DisciplinaAluno> findByFilters(@Param("curso")String curso,
                                            @Param("disciplina")String disciplina,
                                            @Param("isCursada")Boolean isCursada,
-                                           @Param("isDispensado")Boolean isDispensado);
+                                           @Param("isDispensada")Boolean isDispensada,
+                                        @Param("numMatricula") Long numMatricula);
 }

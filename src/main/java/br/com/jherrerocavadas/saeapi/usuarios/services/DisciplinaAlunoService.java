@@ -3,6 +3,7 @@ package br.com.jherrerocavadas.saeapi.usuarios.services;
 import br.com.jherrerocavadas.saeapi.usuarios.dto.DisciplinaAlunoDTO;
 import br.com.jherrerocavadas.saeapi.usuarios.entity.DisciplinaAluno;
 import br.com.jherrerocavadas.saeapi.usuarios.repository.DisciplinaAlunoRepository;
+import br.com.jherrerocavadas.saeapi.usuarios.repository.DisciplinaCursoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,18 +12,25 @@ import java.util.List;
 public class DisciplinaAlunoService {
 
     private DisciplinaAlunoRepository disciplinaAlunoRepository;
+    private DisciplinaCursoRepository disciplinaCursoRepository;
+    private AlunoService alunoService;
 
-    public DisciplinaAlunoService(DisciplinaAlunoRepository disciplinaAlunoRepository) {
+    public DisciplinaAlunoService(DisciplinaAlunoRepository disciplinaAlunoRepository,
+                                  DisciplinaCursoRepository disciplinaCursoRepository,
+                                  AlunoService alunoService) {
         this.disciplinaAlunoRepository = disciplinaAlunoRepository;
+        this.disciplinaCursoRepository = disciplinaCursoRepository;
+        this.alunoService = alunoService;
     }
 
     public List<DisciplinaAluno> findAlunosInDisciplinaAlunoByFilters(String curso,
                                                                       String disciplina,
                                                                       Boolean isCursada,
-                                                                      Boolean isDispensado) {
+                                                                      Boolean isDispensado,
+                                                                      Long numMatricula) {
 
 
-        return disciplinaAlunoRepository.findByFilters(curso, disciplina, isCursada, isDispensado);
+        return disciplinaAlunoRepository.findByFilters(curso, disciplina, isCursada, isDispensado, numMatricula);
     }
 
     public DisciplinaAlunoDTO disciplinaAlunoToDisciplinaAlunoDto(DisciplinaAluno disciplinaAluno) {
@@ -32,8 +40,8 @@ public class DisciplinaAlunoService {
         disciplinaAlunoDTO.setId(disciplinaAluno.getId());
         disciplinaAlunoDTO.setNumMatricula(disciplinaAluno.getAluno().getNumMatricula());
         disciplinaAlunoDTO.setDisciplinaCursoId(disciplinaAluno.getDisciplinaCurso().getId());
-        disciplinaAlunoDTO.setCursada(disciplinaAlunoDTO.isCursada());
-        disciplinaAlunoDTO.setDispensada(disciplinaAluno.isDispensado());
+        disciplinaAlunoDTO.setIsCursada(disciplinaAluno.isCursada());
+        disciplinaAlunoDTO.setIsDispensada(disciplinaAluno.isDispensada());
 
         return disciplinaAlunoDTO;
     }

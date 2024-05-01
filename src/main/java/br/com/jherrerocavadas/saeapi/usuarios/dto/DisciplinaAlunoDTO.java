@@ -9,6 +9,6 @@ public class DisciplinaAlunoDTO {
     private Long id;
     private Long numMatricula;
     private Long disciplinaCursoId;
-    private boolean isCursada;
-    private boolean isDispensada;
+    private Boolean isCursada;
+    private Boolean isDispensada;
 }

@@ -55,9 +55,9 @@ public class DisciplinaAlunoAPI {
             @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção"),
     })
     @GetMapping("/disciplinasAlunos/turmas")
-    //Curso
-    //Disciplina
-    //Aluno com disciplina cursando ou terminada?
+    //Curso Ok
+    //Disciplina Ok
+    //Aluno com disciplina cursando ou terminada? Ok
     public List<DisciplinaAlunoDTO> retornarAlunosPorDisciplinaCurso(@RequestParam(value = "curso") String curso,
                                                                      @RequestParam(value = "disciplina") String disciplina,
                                                                      @RequestParam(value = "alunoConcluiu", required = false) Boolean isCursada,
