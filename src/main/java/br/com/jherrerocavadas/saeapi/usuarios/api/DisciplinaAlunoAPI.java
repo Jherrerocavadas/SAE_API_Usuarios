@@ -1,6 +1,5 @@
 package br.com.jherrerocavadas.saeapi.usuarios.api;
 
-import br.com.jherrerocavadas.saeapi.usuarios.dto.AlunoDTO;
 import br.com.jherrerocavadas.saeapi.usuarios.dto.DisciplinaAlunoDTO;
 import br.com.jherrerocavadas.saeapi.usuarios.entity.DisciplinaAluno;
 import br.com.jherrerocavadas.saeapi.usuarios.repository.DisciplinaAlunoRepository;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Slf4j
 @RestController
@@ -69,7 +67,7 @@ public class DisciplinaAlunoAPI {
                 curso,
                 disciplina,
                 isCursada,
-                isDispensado);
+                isDispensado, null);
 
         for (DisciplinaAluno disciplinaAluno: disciplinaAlunoList) {
             DisciplinaAlunoDTO disciplinaAlunoDTO = disciplinaAlunoService.disciplinaAlunoToDisciplinaAlunoDto(disciplinaAluno);
