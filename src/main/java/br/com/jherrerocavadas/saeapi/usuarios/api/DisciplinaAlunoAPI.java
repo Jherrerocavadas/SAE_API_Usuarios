@@ -284,48 +284,15 @@ public class DisciplinaAlunoAPI {
             @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção"),
     })
     @PostMapping("/disciplinaAluno")
-    public void salvarDisciplinaAluno(@RequestBody DisciplinaAlunoDTO disciplinaAlunoDTO){
-        DisciplinaAluno disciplinaAluno = new DisciplinaAluno();
-////        disciplinaCurso.setFaculdade(new Faculdade(disciplinaCursoDTO.getFaculdadeId()));
-////        disciplinaCurso.setCurso(new Curso(disciplinaCursoDTO.getCursoId()));
-////        disciplinaCurso.setDisciplina(new Disciplina(disciplinaCursoDTO.getDisciplinaId()));
-//
-//
-//        disciplinaCurso.setFaculdade(disciplinaCursoDTO.getFaculdade());
-//        disciplinaCurso.setCurso(disciplinaCursoDTO.getCurso());
-//        disciplinaCurso.setDisciplina(disciplinaCursoDTO.getDisciplina());
-////        disciplinaCurso.setHoraAula1(new HorarioAula(disciplinaCursoDTO.getHorasAula().get(0).getId()));
-////        disciplinaCurso.setHoraAula1(new HorarioAula(disciplinaCursoDTO.getHorasAula().get(1).getId()));
-////        disciplinaCurso.setHoraAula2(new HorarioAula(disciplinaCursoDTO.getHorasAula().get(2).getId()));
-////        disciplinaCurso.setHoraAula3(new HorarioAula(disciplinaCursoDTO.getHorasAula().get(3).getId()));
-//
-//        if(!disciplinaCursoDTO.getHorasAula().isEmpty()){
-//            disciplinaCurso.setHoraAula1(disciplinaCursoDTO.getHorasAula().get(0));
-//            disciplinaCurso.setHoraAula2(disciplinaCursoDTO.getHorasAula().get(1));
-//            disciplinaCurso.setDiaDeAula1(disciplinaCursoDTO.getDiasDeAula().get(0));
-//            disciplinaCurso.setSemestre(disciplinaCursoDTO.getSemestre());
-//
-//            if (disciplinaCursoDTO.getHorasAula().size() == 4) {
-//                disciplinaCurso.setHoraAula3(disciplinaCursoDTO.getHorasAula().get(2));
-//                disciplinaCurso.setHoraAula4(disciplinaCursoDTO.getHorasAula().get(3));
-//
-//            }
-//
-//            if(disciplinaCursoDTO.getDiasDeAula().size() == 2){
-//                disciplinaCurso.setDiaDeAula2(disciplinaCursoDTO.getDiasDeAula().get(1));
-//            }
-//        }
-//
-//
-//        log.info(String.valueOf(disciplinaCurso));
+    public DisciplinaAluno salvarDisciplinaAluno(@RequestBody DisciplinaAlunoDTO disciplinaAlunoDTO){
 
-        disciplinaAlunoRepository.save(disciplinaAluno);
+        return disciplinaAlunoRepository.save(disciplinaAlunoService.disciplinaAlunoDtoToDisciplinaAluno(disciplinaAlunoDTO));
     }
 
 
 
 
-    @Operation(summary =  "Editar uma relação disciplina-aluni existente")
+    @Operation(summary =  "Editar uma relação disciplina-aluno existente")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description =  "Relação disciplina-aluno alterada e salva"),
             @ApiResponse(responseCode = "400", description = "Requisição inválida"),

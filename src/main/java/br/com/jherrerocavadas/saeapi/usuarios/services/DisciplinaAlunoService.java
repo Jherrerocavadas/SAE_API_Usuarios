@@ -45,4 +45,18 @@ public class DisciplinaAlunoService {
 
         return disciplinaAlunoDTO;
     }
+
+    public DisciplinaAluno disciplinaAlunoDtoToDisciplinaAluno(DisciplinaAlunoDTO disciplinaAlunoDTO) {
+
+
+        DisciplinaAluno disciplinaAluno = new DisciplinaAluno();
+
+        disciplinaAluno.setId(disciplinaAlunoDTO.getId());
+        disciplinaAluno.setAluno(alunoService.findById(disciplinaAlunoDTO.getNumMatricula()));
+        disciplinaAluno.setDisciplinaCurso(disciplinaCursoRepository.findById(disciplinaAlunoDTO.getDisciplinaCursoId()).get());
+        disciplinaAluno.setCursada(disciplinaAlunoDTO.getIsCursada());
+        disciplinaAluno.setDispensada(disciplinaAlunoDTO.getIsDispensada());
+
+        return disciplinaAluno;
+    }
 }
