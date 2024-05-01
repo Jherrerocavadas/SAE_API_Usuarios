@@ -72,12 +72,17 @@ public class AlunoService {
         return alunoResponseDTO;
     }
 
-        Optional<Usuario> usuarioOptional = usuarioService.findUsuarioByNumUsuario(numUsuario);
 
-        if(usuarioOptional.isPresent()){
-            aluno.setUsuario(usuarioOptional.get());
+
+    public Aluno findById(Long numMatricula) {
+
+        Optional<Aluno> alunoOptional = alunoRepository.findById(numMatricula);
+
+        if(alunoOptional.isEmpty()){
+            return null;
+
         }
+        return alunoOptional.get();
 
-        return aluno;
     }
 }
