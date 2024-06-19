@@ -40,11 +40,16 @@ public class UsuarioService {
     @Autowired
     private UsuarioService(UsuarioRepository usuarioRepository,
                            AlunoRepository alunoRepository,
-                           AlunoService alunoService, ProfessorRepository professorRepository) {
+                           AlunoService alunoService,
+                           ProfessorRepository professorRepository,
+                           ProfessorService professorService,
+                           JwtService jwtService) {
         this.usuarioRepository = usuarioRepository;
         this.alunoRepository = alunoRepository;
         this.alunoService = alunoService;
         this.professorRepository = professorRepository;
+        this.professorService = professorService;
+        this.jwtService = jwtService;
     }
 
     public List<UsuarioDTO> findAllUsuariosDTO() {
@@ -65,14 +70,14 @@ public class UsuarioService {
     public UsuarioDTO usuarioToUsuarioDTO(Usuario usuario) {
         UsuarioDTO usuarioDTO = new UsuarioDTO();
 
-        usuarioDTO.setLogin(usuario.getLogin());
+        usuarioDTO.setLogin(usuario.getUsername());
         usuarioDTO.setEmail(usuario.getEmail());
         usuarioDTO.setNome(usuario.getNome());
 //        usuarioDTO.setNumMatricula(usuario.getNumMatricula());
         usuarioDTO.setNumUsuario(usuario.getNumUsuario());
         usuarioDTO.setSenha(usuario.getSenha());
-        usuarioDTO.setTipoUsuario(TipoUsuario.tipoUsuarioByCodUsuario(usuario.getTipoUsuario()));
-        usuarioDTO.setFotoUsuario(Base64.getEncoder().encodeToString(usuario.getFotoUsuario()));
+        usuarioDTO.setTipoUsuario(usuario.getTipoUsuario().getTipoUsuario());
+        usuarioDTO.setFotoUsuario(usuario.getFotoUsuario() != null ? Base64.getEncoder().encodeToString(usuario.getFotoUsuario()) : null);
         return usuarioDTO;
 
     }
