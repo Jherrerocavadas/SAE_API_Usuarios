@@ -18,12 +18,17 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long numUsuario;
     private String nome; //TODO: Separar por nome e sobrenome talvez
-    private String login;
+    private String username;
     private String senha;
     private String email;
 
-    @Column(columnDefinition = "TINYINT")
-    private Integer tipoUsuario; // ALUNO, PROFESSOR, SECRETARIA/ADMINISTRATIVO
+    @ManyToOne(cascade = CascadeType.DETACH)
+    @JoinColumn(name = "tipoUsuario", referencedColumnName = "tipoUsuario",
+            foreignKey = @ForeignKey(name = "usuario_tipo_usuario_FK", value = ConstraintMode.CONSTRAINT))
+    private DadosTipoUsuario tipoUsuario; // ALUNO, PROFESSOR, SECRETARIA/ADMINISTRATIVO
+
+    //Identificar o indivíduo caso ele tenha um cadastro já
+//    private String cpf;
 
     private byte[] fotoUsuario;
 

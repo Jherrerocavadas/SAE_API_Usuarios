@@ -2,7 +2,6 @@ package br.com.jherrerocavadas.saeapi.usuarios.api;
 
 import br.com.jherrerocavadas.saeapi.usuarios.dto.UsuarioDTO;
 import br.com.jherrerocavadas.saeapi.usuarios.entity.Usuario;
-import br.com.jherrerocavadas.saeapi.usuarios.enums.TipoUsuario;
 import br.com.jherrerocavadas.saeapi.usuarios.repository.AlunoRepository;
 import br.com.jherrerocavadas.saeapi.usuarios.repository.ProfessorRepository;
 import br.com.jherrerocavadas.saeapi.usuarios.repository.UsuarioRepository;
@@ -10,6 +9,7 @@ import br.com.jherrerocavadas.saeapi.usuarios.services.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -22,7 +22,10 @@ import java.util.Objects;
 
 @Slf4j
 @RestController
+@Tag(name = "Usuario", description = "Endpoints relacionados à ações de um usuário no sistema")
 public class UsuarioAPI {
+
+    private final String SYSTEM_HEADER = "X-System-Cod";
 
 
     private final UsuarioRepository usuarioRepository;
@@ -75,11 +78,11 @@ public class UsuarioAPI {
             @ApiResponse(responseCode = "404", description = "Dados não encontrados", content = {}),
             @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção"),
     })
-    @GetMapping("/usuarios/{tipoUsuario}/{login}")
-    public ResponseEntity<UsuarioDTO> retornarUsuarioPorTipoELogin(@PathVariable String tipoUsuario,
-                                                                   @PathVariable String login){
+    @GetMapping("/usuarios/{tipoUsuario}/{username}")
+    public ResponseEntity<Object> retornarUsuarioPorTipoELogin(@PathVariable String tipoUsuario,
+                                                               @PathVariable String username){
 
-        Usuario usuario = usuarioService.findUsuarioByTipoUsuarioAndLogin(tipoUsuario, login);
+        Usuario usuario = usuarioService.findUsuarioByTipoUsuarioAndUsername(tipoUsuario, username);
 
         if(Objects.nonNull(usuario)){
         return ResponseEntity.ok(usuarioService.usuarioToUsuarioDTO(usuario));
@@ -98,16 +101,19 @@ public class UsuarioAPI {
             @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção"),
     })
     @PostMapping("/usuarios/autenticar")
-    public ResponseEntity<Object> autenticarAluno(@RequestBody UsuarioDTO usuarioDTO){
-        if(usuarioDTO.getTipoUsuario().equals(TipoUsuario.ALUNO)){
-            return ResponseEntity.accepted().body(usuarioService.autenticarAluno(usuarioDTO));
-        }
+    public ResponseEntity<Object> autenticarUsuario(@RequestHeader(SYSTEM_HEADER) String system, @RequestBody UsuarioDTO usuarioDTO){
 
-        else if(usuarioDTO.getTipoUsuario().equals(TipoUsuario.PROFESSOR)){
-            return ResponseEntity.accepted().body(usuarioService.autenticarProfessor(usuarioDTO));
-        }
-
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(usuarioService.loginUsuario(usuarioDTO));
+//
+//        if(usuarioDTO.getTipoUsuario().equals(TipoUsuarioDomain.ALUNO)){
+//            return ResponseEntity.accepted().body(usuarioService.autenticarAluno(usuarioDTO));
+//        }
+//
+//        else if(usuarioDTO.getTipoUsuario().equals(TipoUsuarioDomain.PROFESSOR)){
+//            return ResponseEntity.accepted().body(usuarioService.autenticarProfessor(usuarioDTO));
+//        }
+//
+//        return ResponseEntity.notFound().build();
     }
 
 

@@ -3,9 +3,11 @@ package br.com.jherrerocavadas.saeapi.usuarios.services;
 import br.com.jherrerocavadas.saeapi.usuarios.dto.AlunoDTO;
 import br.com.jherrerocavadas.saeapi.usuarios.dto.AlunoResponseDTO;
 import br.com.jherrerocavadas.saeapi.usuarios.dto.UsuarioDTO;
+import br.com.jherrerocavadas.saeapi.usuarios.dto.UsuarioLoginResponseDTO;
 import br.com.jherrerocavadas.saeapi.usuarios.entity.Aluno;
+import br.com.jherrerocavadas.saeapi.usuarios.entity.Professor;
+import br.com.jherrerocavadas.saeapi.usuarios.entity.DadosTipoUsuario;
 import br.com.jherrerocavadas.saeapi.usuarios.entity.Usuario;
-import br.com.jherrerocavadas.saeapi.usuarios.enums.TipoUsuario;
 import br.com.jherrerocavadas.saeapi.usuarios.repository.AlunoRepository;
 import br.com.jherrerocavadas.saeapi.usuarios.repository.ProfessorRepository;
 import br.com.jherrerocavadas.saeapi.usuarios.repository.UsuarioRepository;
@@ -28,6 +30,11 @@ public class UsuarioService {
 
     private final AlunoService alunoService;
     private final ProfessorRepository professorRepository;
+
+    private final ProfessorService professorService;
+
+    private final JwtService jwtService;
+
 
 
     @Autowired
@@ -84,7 +91,7 @@ public class UsuarioService {
 
     public Usuario autenticarUsuario(UsuarioDTO usuarioDTO) {
         System.out.printf("usuarioDTO é: %s %n", usuarioDTO);
-        Usuario usuario = usuarioRepository.findByLoginAndSenha(usuarioDTO.getLogin(), usuarioDTO.getSenha());
+        Usuario usuario = usuarioRepository.findByUsernameAndSenha(usuarioDTO.getLogin(), usuarioDTO.getSenha());
         System.out.printf("usuario é: %s %n", usuario);
         return usuario;
     }
@@ -104,22 +111,20 @@ public class UsuarioService {
     public Usuario usuarioDtoToUsuario(UsuarioDTO usuarioDTO) {
 
         Usuario usuario = new Usuario();
-        usuario.setLogin(usuarioDTO.getLogin());
+        usuario.setUsername(usuarioDTO.getLogin());
         usuario.setEmail(usuarioDTO.getEmail());
         usuario.setNome(usuarioDTO.getNome());
         usuario.setNumUsuario(usuarioDTO.getNumUsuario());
 //        usuario.setNumMatricula(usuarioDTO.getNumMatricula());
         usuario.setSenha(usuarioDTO.getSenha());
-        usuario.setTipoUsuario(usuarioDTO.getTipoUsuario().getCodTipo());
+        usuario.setTipoUsuario(DadosTipoUsuario.builder().tipoUsuario(usuarioDTO.getTipoUsuario()).build());
         usuario.setFotoUsuario(usuarioDTO.getFotoUsuario().getBytes());
         return usuario;
     }
 
-    public Usuario findUsuarioByTipoUsuarioAndLogin(String tipoUsuario, String login) {
+    public Usuario findUsuarioByTipoUsuarioAndUsername(String tipoUsuario, String username) {
 
-       TipoUsuario tipoUsuarioEnum = TipoUsuario.codUsuarioByTipoUsuario(tipoUsuario);
-
-        return usuarioRepository.findByTipoUsuarioAndLogin(tipoUsuarioEnum.getCodTipo(), login);
+        return usuarioRepository.findByTipoUsuarioAndUsername(DadosTipoUsuario.builder().tipoUsuario(tipoUsuario).build(), username);
 
 
 
@@ -149,5 +154,19 @@ public class UsuarioService {
 
         }
         return "Sem foto, amigo";
+    }
+
+    public UsuarioLoginResponseDTO loginUsuario(UsuarioDTO usuarioDTO) {
+        //TODO: IMPLEMENTAR VERIFICAÇÃO DA FORÇA DA SENHA/PARAMETROS DA SENHA
+        Usuario usuario = this.autenticarUsuario(usuarioDTO);
+
+        return UsuarioLoginResponseDTO.builder()
+                .codigoUsuario(usuario.getNumUsuario())
+                .email(usuario.getEmail())
+                .tipoUsuario(usuario.getTipoUsuario().getTipoUsuario())
+                .fotoUsuario(usuario.getFotoUsuario() != null ? Base64.getEncoder().encodeToString(usuario.getFotoUsuario()) : null)
+                .nome(usuario.getNome())
+                .tokenJwt(jwtService.gerarToken(usuario))
+                .build();
     }
 }

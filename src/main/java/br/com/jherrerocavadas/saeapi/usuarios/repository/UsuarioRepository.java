@@ -1,12 +1,13 @@
 package br.com.jherrerocavadas.saeapi.usuarios.repository;
 
+import br.com.jherrerocavadas.saeapi.usuarios.entity.DadosTipoUsuario;
 import br.com.jherrerocavadas.saeapi.usuarios.entity.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
-    Usuario findByLogin(String login);
+//    Usuario findByLogin(String login);
 
-    Usuario findByTipoUsuarioAndLogin(Integer tipoUsuario, String login);
+    Usuario findByTipoUsuarioAndUsername(DadosTipoUsuario tipoUsuario, String username);
 
-    Usuario findByLoginAndSenha(String login, String senha);
+    Usuario findByUsernameAndSenha(String username, String senha);
 }
