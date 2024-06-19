@@ -1,7 +1,7 @@
 package br.com.jherrerocavadas.saeapi.usuarios.dto;
 
-import br.com.jherrerocavadas.saeapi.usuarios.dto.dependenciesDTO.CursoDTO;
-import br.com.jherrerocavadas.saeapi.usuarios.dto.dependenciesDTO.FaculdadeDTO;
+import br.com.jherrerocavadas.saeapi.usuarios.entity.dependencies.Curso;
+import br.com.jherrerocavadas.saeapi.usuarios.entity.dependencies.Faculdade;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AlunoResponseDTO {
+public class DadosComplementaresAlunoDTO {
 
     private Long numMatricula;
 
@@ -21,9 +21,7 @@ public class AlunoResponseDTO {
 
     private Integer semestre;
 
-    private UsuarioDTO usuario;
+    private Faculdade faculdade;
 
-    private FaculdadeDTO faculdade;
-
-    private CursoDTO curso;
+    private Curso curso;
 }

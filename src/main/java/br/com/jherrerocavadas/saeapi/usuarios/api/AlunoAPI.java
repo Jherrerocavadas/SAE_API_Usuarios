@@ -4,7 +4,6 @@ import br.com.jherrerocavadas.saeapi.usuarios.dto.AlunoDTO;
 import br.com.jherrerocavadas.saeapi.usuarios.entity.Aluno;
 import br.com.jherrerocavadas.saeapi.usuarios.repository.AlunoRepository;
 import br.com.jherrerocavadas.saeapi.usuarios.services.AlunoService;
-import br.com.jherrerocavadas.saeapi.usuarios.services.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -25,13 +24,12 @@ public class AlunoAPI {
 
     private final AlunoService alunoService;
 
-    private final UsuarioService usuarioService;
 
     @Autowired
-    private AlunoAPI(AlunoRepository alunoRepository, AlunoService alunoService, UsuarioService usuarioService){
+    private AlunoAPI(AlunoRepository alunoRepository,
+                     AlunoService alunoService){
         this.alunoRepository = alunoRepository;
         this.alunoService = alunoService;
-        this.usuarioService = usuarioService;
     }
 
     @Operation(summary =  "Verificar o serviço de disciplinas de um aluno")
@@ -45,20 +43,6 @@ public class AlunoAPI {
         return ResponseEntity.ok().body("Serviço operacional");
     }
 
-
-    @Operation(summary =  "Criar um cadastro de aluno para um usuário já existente")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description =  "Aluno vinculado ao usuário informado"),
-            @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
-            @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção"),
-    })
-    @PostMapping("/alunos/aluno/{numUsuario}")
-    public ResponseEntity<Aluno> cadastrarAlunoParaUsuario(@RequestBody AlunoDTO alunoDTO,
-                                                           @PathVariable("numUsuario") Long numUsuario){
-
-        return ResponseEntity.ok(usuarioService.cadastrarAlunoPorUsuario(alunoDTO, numUsuario));
-
-    }
 
     @Operation(summary =  "Retornar dados de um aluno")
     @ApiResponses(value = {

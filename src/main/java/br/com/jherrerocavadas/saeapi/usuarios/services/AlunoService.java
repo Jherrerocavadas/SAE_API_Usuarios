@@ -1,8 +1,11 @@
 package br.com.jherrerocavadas.saeapi.usuarios.services;
 
 import br.com.jherrerocavadas.saeapi.usuarios.dto.AlunoDTO;
-import br.com.jherrerocavadas.saeapi.usuarios.dto.AlunoResponseDTO;
+import br.com.jherrerocavadas.saeapi.usuarios.dto.DadosComplementaresAlunoDTO;
+import br.com.jherrerocavadas.saeapi.usuarios.dto.UsuarioDTO;
+import br.com.jherrerocavadas.saeapi.usuarios.dto.UsuarioLoginResponseDTO;
 import br.com.jherrerocavadas.saeapi.usuarios.entity.Aluno;
+import br.com.jherrerocavadas.saeapi.usuarios.entity.Usuario;
 import br.com.jherrerocavadas.saeapi.usuarios.entity.dependencies.Curso;
 import br.com.jherrerocavadas.saeapi.usuarios.entity.dependencies.Faculdade;
 import br.com.jherrerocavadas.saeapi.usuarios.repository.AlunoRepository;
@@ -21,13 +24,17 @@ public class AlunoService {
 
     private CursoService cursoService;
 
+    private final UsuarioService usuarioService;
+
     @Autowired
     public AlunoService(FaculdadeService faculdadeService,
                         CursoService cursoService,
-                        AlunoRepository alunoRepository) {
+                        AlunoRepository alunoRepository,
+                        UsuarioService usuarioService) {
         this.faculdadeService = faculdadeService;
         this.cursoService = cursoService;
         this.alunoRepository = alunoRepository;
+        this.usuarioService = usuarioService;
     }
 
     //Converter DTO para entidade do banco de dados
@@ -59,17 +66,15 @@ public class AlunoService {
         return alunoDTO;
     }
 
-    public AlunoResponseDTO toAlunoResponse(Aluno aluno, UsuarioService usuarioService){
-        AlunoResponseDTO alunoResponseDTO = new AlunoResponseDTO();
-
-        alunoResponseDTO.setNumMatricula(aluno.getNumMatricula());
-        alunoResponseDTO.setSemestre(aluno.getSemestre());
-        alunoResponseDTO.setPercentualProgressao(aluno.getPercentualProgressao());
-        alunoResponseDTO.setPercentualRendimento(aluno.getPercentualRendimento());
-        alunoResponseDTO.setFaculdade(faculdadeService.faculdadeToFaculdadeDto(aluno.getFaculdade()));
-        alunoResponseDTO.setCurso(cursoService.cursoToCursoDto(aluno.getCurso()));
-        alunoResponseDTO.setUsuario(usuarioService.usuarioToUsuarioDTO(aluno.getUsuario()));
-        return alunoResponseDTO;
+    public DadosComplementaresAlunoDTO getDadosComplementaresAluno(Aluno aluno){
+        return DadosComplementaresAlunoDTO.builder()
+                .numMatricula(aluno.getNumMatricula())
+                .semestre(aluno.getSemestre())
+                .percentualProgressao(aluno.getPercentualProgressao())
+                .percentualRendimento(aluno.getPercentualRendimento())
+                .faculdade(aluno.getFaculdade())
+                .curso(aluno.getCurso())
+                .build();
     }
 
 
@@ -83,6 +88,16 @@ public class AlunoService {
 
         }
         return alunoOptional.get();
+
+    }
+
+    public UsuarioLoginResponseDTO autenticarAluno(UsuarioDTO usuarioDTO) {
+        UsuarioLoginResponseDTO loginResponseDTO = usuarioService.loginUsuario(usuarioDTO);
+        Aluno aluno = alunoRepository.findAlunoByUsuario(Usuario.builder().numUsuario(loginResponseDTO.getCodigoUsuario()).build());
+        loginResponseDTO.setDadosComplementares(this.getDadosComplementaresAluno(aluno));
+
+        return loginResponseDTO;
+
 
     }
 }

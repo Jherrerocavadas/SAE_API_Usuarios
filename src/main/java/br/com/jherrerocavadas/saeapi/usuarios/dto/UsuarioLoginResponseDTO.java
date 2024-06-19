@@ -17,4 +17,5 @@ public class UsuarioLoginResponseDTO {
     private String tipoUsuario; // ALUNO, PROFESSOR, SECRETARIA/ADMINISTRATIVO
     private String fotoUsuario;
 
+    private Object dadosComplementares;
 }

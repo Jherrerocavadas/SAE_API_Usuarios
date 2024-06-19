@@ -2,9 +2,8 @@ package br.com.jherrerocavadas.saeapi.usuarios.api;
 
 import br.com.jherrerocavadas.saeapi.usuarios.dto.UsuarioDTO;
 import br.com.jherrerocavadas.saeapi.usuarios.entity.Usuario;
-import br.com.jherrerocavadas.saeapi.usuarios.repository.AlunoRepository;
-import br.com.jherrerocavadas.saeapi.usuarios.repository.ProfessorRepository;
 import br.com.jherrerocavadas.saeapi.usuarios.repository.UsuarioRepository;
+import br.com.jherrerocavadas.saeapi.usuarios.services.AlunoService;
 import br.com.jherrerocavadas.saeapi.usuarios.services.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -29,19 +28,16 @@ public class UsuarioAPI {
 
 
     private final UsuarioRepository usuarioRepository;
-    private final AlunoRepository alunoRepository;
-    private final ProfessorRepository professorRepository;
+    private final AlunoService alunoService;
     private final UsuarioService usuarioService;
 
 
     @Autowired
     private UsuarioAPI(UsuarioRepository usuarioRepository,
-                       AlunoRepository alunoRepository,
-                       ProfessorRepository professorRepository,
+                       AlunoService alunoService,
                        UsuarioService usuarioService){
         this.usuarioRepository = usuarioRepository;
-        this.alunoRepository = alunoRepository;
-        this.professorRepository = professorRepository;
+        this.alunoService = alunoService;
         this.usuarioService = usuarioService;
 
     }
@@ -114,6 +110,19 @@ public class UsuarioAPI {
 //        }
 //
 //        return ResponseEntity.notFound().build();
+    }
+
+    @Operation(summary =  "Autenticar um aluno")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "202", description =  "Usuário autenticado"),
+            @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+            @ApiResponse(responseCode = "404", description = "Dados não encontrados", content = {}),
+            @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção"),
+    })
+    @PostMapping("/usuarios/autenticar/aluno")
+    public ResponseEntity<Object> autenticarAluno(@RequestHeader(SYSTEM_HEADER) String system, @RequestBody UsuarioDTO usuarioDTO){
+
+        return ResponseEntity.ok(alunoService.autenticarAluno(usuarioDTO));
     }
 
 
