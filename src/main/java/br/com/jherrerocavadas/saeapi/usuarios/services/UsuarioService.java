@@ -1,11 +1,8 @@
 package br.com.jherrerocavadas.saeapi.usuarios.services;
 
-import br.com.jherrerocavadas.saeapi.usuarios.dto.AlunoDTO;
-import br.com.jherrerocavadas.saeapi.usuarios.dto.AlunoResponseDTO;
 import br.com.jherrerocavadas.saeapi.usuarios.dto.UsuarioDTO;
 import br.com.jherrerocavadas.saeapi.usuarios.dto.UsuarioLoginResponseDTO;
-import br.com.jherrerocavadas.saeapi.usuarios.entity.Aluno;
-import br.com.jherrerocavadas.saeapi.usuarios.entity.Professor;
+import br.com.jherrerocavadas.saeapi.usuarios.dto.requests.LoginUsuarioRequestDTO;
 import br.com.jherrerocavadas.saeapi.usuarios.entity.DadosTipoUsuario;
 import br.com.jherrerocavadas.saeapi.usuarios.entity.Usuario;
 import br.com.jherrerocavadas.saeapi.usuarios.repository.AlunoRepository;
@@ -161,9 +158,11 @@ public class UsuarioService {
         return "Sem foto, amigo";
     }
 
-    public UsuarioLoginResponseDTO loginUsuario(UsuarioDTO usuarioDTO) {
-        //TODO: IMPLEMENTAR VERIFICAÇÃO DA FORÇA DA SENHA/PARAMETROS DA SENHA
-        Usuario usuario = this.autenticarUsuario(usuarioDTO);
+    public UsuarioLoginResponseDTO autenticarUsuario(LoginUsuarioRequestDTO loginUsuarioRequestDTO) {
+        Usuario usuario = usuarioRepository.findByUsernameAndSenha(
+                loginUsuarioRequestDTO.getUsername(),
+                loginUsuarioRequestDTO.getSenha()
+        );
 
         return UsuarioLoginResponseDTO.builder()
                 .codigoUsuario(usuario.getNumUsuario())

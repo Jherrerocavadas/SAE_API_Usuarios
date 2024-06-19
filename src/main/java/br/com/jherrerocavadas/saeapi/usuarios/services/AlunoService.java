@@ -2,8 +2,8 @@ package br.com.jherrerocavadas.saeapi.usuarios.services;
 
 import br.com.jherrerocavadas.saeapi.usuarios.dto.AlunoDTO;
 import br.com.jherrerocavadas.saeapi.usuarios.dto.DadosComplementaresAlunoDTO;
-import br.com.jherrerocavadas.saeapi.usuarios.dto.UsuarioDTO;
 import br.com.jherrerocavadas.saeapi.usuarios.dto.UsuarioLoginResponseDTO;
+import br.com.jherrerocavadas.saeapi.usuarios.dto.requests.LoginUsuarioRequestDTO;
 import br.com.jherrerocavadas.saeapi.usuarios.entity.Aluno;
 import br.com.jherrerocavadas.saeapi.usuarios.entity.Usuario;
 import br.com.jherrerocavadas.saeapi.usuarios.entity.dependencies.Curso;
@@ -91,8 +91,8 @@ public class AlunoService {
 
     }
 
-    public UsuarioLoginResponseDTO autenticarAluno(UsuarioDTO usuarioDTO) {
-        UsuarioLoginResponseDTO loginResponseDTO = usuarioService.loginUsuario(usuarioDTO);
+    public UsuarioLoginResponseDTO autenticarAluno(LoginUsuarioRequestDTO loginUsuarioRequestDTO) {
+        UsuarioLoginResponseDTO loginResponseDTO = usuarioService.autenticarUsuario(loginUsuarioRequestDTO);
         Aluno aluno = alunoRepository.findAlunoByUsuario(Usuario.builder().numUsuario(loginResponseDTO.getCodigoUsuario()).build());
         loginResponseDTO.setDadosComplementares(this.getDadosComplementaresAluno(aluno));
 

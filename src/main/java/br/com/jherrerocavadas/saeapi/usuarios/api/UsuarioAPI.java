@@ -1,9 +1,11 @@
 package br.com.jherrerocavadas.saeapi.usuarios.api;
 
 import br.com.jherrerocavadas.saeapi.usuarios.dto.UsuarioDTO;
+import br.com.jherrerocavadas.saeapi.usuarios.dto.requests.LoginUsuarioRequestDTO;
 import br.com.jherrerocavadas.saeapi.usuarios.entity.Usuario;
 import br.com.jherrerocavadas.saeapi.usuarios.repository.UsuarioRepository;
 import br.com.jherrerocavadas.saeapi.usuarios.services.AlunoService;
+import br.com.jherrerocavadas.saeapi.usuarios.services.ProfessorService;
 import br.com.jherrerocavadas.saeapi.usuarios.services.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -97,19 +99,10 @@ public class UsuarioAPI {
             @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção"),
     })
     @PostMapping("/usuarios/autenticar")
-    public ResponseEntity<Object> autenticarUsuario(@RequestHeader(SYSTEM_HEADER) String system, @RequestBody UsuarioDTO usuarioDTO){
+    public ResponseEntity<Object> autenticarUsuario(@RequestHeader(SYSTEM_HEADER) String system,
+                                                    @RequestBody LoginUsuarioRequestDTO loginUsuarioRequestDTO){
 
-        return ResponseEntity.ok(usuarioService.loginUsuario(usuarioDTO));
-//
-//        if(usuarioDTO.getTipoUsuario().equals(TipoUsuarioDomain.ALUNO)){
-//            return ResponseEntity.accepted().body(usuarioService.autenticarAluno(usuarioDTO));
-//        }
-//
-//        else if(usuarioDTO.getTipoUsuario().equals(TipoUsuarioDomain.PROFESSOR)){
-//            return ResponseEntity.accepted().body(usuarioService.autenticarProfessor(usuarioDTO));
-//        }
-//
-//        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(usuarioService.autenticarUsuario(loginUsuarioRequestDTO));
     }
 
     @Operation(summary =  "Autenticar um aluno")
@@ -120,9 +113,10 @@ public class UsuarioAPI {
             @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção"),
     })
     @PostMapping("/usuarios/autenticar/aluno")
-    public ResponseEntity<Object> autenticarAluno(@RequestHeader(SYSTEM_HEADER) String system, @RequestBody UsuarioDTO usuarioDTO){
+    public ResponseEntity<Object> autenticarAluno(@RequestHeader(SYSTEM_HEADER) String system,
+                                                  @RequestBody LoginUsuarioRequestDTO loginUsuarioRequestDTO){
 
-        return ResponseEntity.ok(alunoService.autenticarAluno(usuarioDTO));
+        return ResponseEntity.ok(alunoService.autenticarAluno(loginUsuarioRequestDTO));
     }
 
 
