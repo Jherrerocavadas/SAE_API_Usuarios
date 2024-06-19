@@ -9,8 +9,6 @@ import br.com.jherrerocavadas.saeapi.usuarios.entity.Usuario;
 import br.com.jherrerocavadas.saeapi.usuarios.entity.dependencies.Curso;
 import br.com.jherrerocavadas.saeapi.usuarios.entity.dependencies.Faculdade;
 import br.com.jherrerocavadas.saeapi.usuarios.repository.AlunoRepository;
-import br.com.jherrerocavadas.saeapi.usuarios.services.dependencies.CursoService;
-import br.com.jherrerocavadas.saeapi.usuarios.services.dependencies.FaculdadeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,21 +16,13 @@ import java.util.Optional;
 
 @Service
 public class AlunoService {
-    private FaculdadeService faculdadeService;
 
     private AlunoRepository alunoRepository;
-
-    private CursoService cursoService;
-
     private final UsuarioService usuarioService;
 
     @Autowired
-    public AlunoService(FaculdadeService faculdadeService,
-                        CursoService cursoService,
-                        AlunoRepository alunoRepository,
+    public AlunoService(AlunoRepository alunoRepository,
                         UsuarioService usuarioService) {
-        this.faculdadeService = faculdadeService;
-        this.cursoService = cursoService;
         this.alunoRepository = alunoRepository;
         this.usuarioService = usuarioService;
     }
