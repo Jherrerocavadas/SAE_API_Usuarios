@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.com.jherrerocavadas</groupId>
-	<artifactId>SaeApiUsuarios</artifactId>
+	<artifactId>sae-api-usuarios</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>SaeApiUsuarios</name>
 	<description>Modulo da API SAE para cadastro de usuários</description>
