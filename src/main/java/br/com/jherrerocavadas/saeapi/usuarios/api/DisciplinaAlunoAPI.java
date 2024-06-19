@@ -32,19 +32,6 @@ public class DisciplinaAlunoAPI {
         this.disciplinaAlunoService = disciplinaAlunoService;
     }
 
-    @Operation(summary =  "Verificar o serviço de disciplinas de um aluno")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description =  "Serviço OK"),
-            @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
-            @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção"),
-    })
-    @GetMapping("/check-disciplinas-aluno-service")
-    public ResponseEntity<String> verificaServico(){
-        return ResponseEntity.ok().body("Serviço operacional");
-    }
-
-
-
 
     @Operation(summary =  "Retornar todos os alunos que possuem cadastro em determinada disciplina")
     @ApiResponses(value = {

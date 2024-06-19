@@ -44,16 +44,6 @@ public class UsuarioAPI {
 
     }
 
-    @Operation(summary =  "Verificar o serviço de usuários")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description =  "Serviço OK"),
-            @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
-            @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção"),
-    })
-    @GetMapping("/check-usuario-service")
-    public ResponseEntity<String> verificaServico(){
-        return ResponseEntity.ok().body("Serviço operacional");
-    }
 
     @Operation(summary =  "Retornar todos os usuários")
     @ApiResponses(value = {
