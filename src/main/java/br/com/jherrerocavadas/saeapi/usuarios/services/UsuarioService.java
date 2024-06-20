@@ -64,65 +64,41 @@ public class UsuarioService {
         return usuariosDTO;
     }
 
-    public UsuarioDTO usuarioToUsuarioDTO(Usuario usuario) {
-        UsuarioDTO usuarioDTO = new UsuarioDTO();
 
-        usuarioDTO.setLogin(usuario.getUsername());
-        usuarioDTO.setEmail(usuario.getEmail());
-        usuarioDTO.setNome(usuario.getNome());
-//        usuarioDTO.setNumMatricula(usuario.getNumMatricula());
-        usuarioDTO.setNumUsuario(usuario.getNumUsuario());
-        usuarioDTO.setSenha(usuario.getSenha());
-        usuarioDTO.setTipoUsuario(usuario.getTipoUsuario().getTipoUsuario());
-        usuarioDTO.setFotoUsuario(usuario.getFotoUsuario() != null ? Base64.getEncoder().encodeToString(usuario.getFotoUsuario()) : null);
-        return usuarioDTO;
+    /*----------------------------------------------- < EntityToDTO > ------------------------------------------------*/
 
-    }
-
-    public Aluno cadastrarAlunoPorUsuario(AlunoDTO alunoDTO, Long numUsuario){
-        Aluno aluno = alunoService.alunoDtoToAluno(alunoDTO);
-        Optional<Usuario> usuarioOptional = this.findUsuarioByNumUsuario(numUsuario);
-
-        if(usuarioOptional.isPresent()){
-            aluno.setUsuario(usuarioOptional.get());
-        }
-        aluno = alunoRepository.save(aluno); //Atualizar a entidade do aluno com o número da matrícula atribuido
-        return aluno;
-    }
-
-
-    public Usuario autenticarUsuario(UsuarioDTO usuarioDTO) {
-        System.out.printf("usuarioDTO é: %s %n", usuarioDTO);
-        Usuario usuario = usuarioRepository.findByUsernameAndSenha(usuarioDTO.getLogin(), usuarioDTO.getSenha());
-        System.out.printf("usuario é: %s %n", usuario);
-        return usuario;
-    }
-
-    public AlunoResponseDTO autenticarAluno(UsuarioDTO usuarioDTO) {
-        Aluno aluno = alunoRepository.findAlunoByUsuario(this.autenticarUsuario(usuarioDTO));
-        aluno.getUsuario().setSenha("");
-        return alunoService.toAlunoResponse(aluno, this);
-
-
-    }
-    public Object autenticarProfessor(UsuarioDTO usuarioDTO) {
-        //TODO: gerar autenticação do professor
-        return true;
-    }
+    //TODO: CRIAR PACOTE DE CONVERTERS
 
     public Usuario usuarioDtoToUsuario(UsuarioDTO usuarioDTO) {
-
-        Usuario usuario = new Usuario();
-        usuario.setUsername(usuarioDTO.getLogin());
-        usuario.setEmail(usuarioDTO.getEmail());
-        usuario.setNome(usuarioDTO.getNome());
-        usuario.setNumUsuario(usuarioDTO.getNumUsuario());
-//        usuario.setNumMatricula(usuarioDTO.getNumMatricula());
-        usuario.setSenha(usuarioDTO.getSenha());
-        usuario.setTipoUsuario(DadosTipoUsuario.builder().tipoUsuario(usuarioDTO.getTipoUsuario()).build());
-        usuario.setFotoUsuario(usuarioDTO.getFotoUsuario().getBytes());
-        return usuario;
+        return Usuario.builder()
+                .numUsuario(usuarioDTO.getNumUsuario())
+                .nome(usuarioDTO.getNome())
+                .username(usuarioDTO.getUsername())
+                .email(usuarioDTO.getEmail())
+                .senha(usuarioDTO.getSenha())
+                .tipoUsuario(DadosTipoUsuario.builder()
+                        .tipoUsuario(usuarioDTO.getTipoUsuario())
+                        .build())
+                .fotoUsuario(usuarioDTO.getFotoUsuario().getBytes())
+                .build();
     }
+
+    /*----------------------------------------------- < DtoToEntity > ------------------------------------------------*/
+    public UsuarioDTO usuarioToUsuarioDTO(Usuario usuario) {
+        return UsuarioDTO.builder()
+        .numUsuario(usuario.getNumUsuario())
+                .nome(usuario.getNome())
+                .username(usuario.getUsername())
+                .email(usuario.getEmail())
+                .senha(usuario.getSenha())
+                .tipoUsuario(usuario.getTipoUsuario().getTipoUsuario())
+                .fotoUsuario(Objects.nonNull(usuario.getFotoUsuario())? Base64.getEncoder().encodeToString(usuario.getFotoUsuario()) : null)
+                .build();
+
+    }
+
+    /*------------------------------------------- < Ações no repository > --------------------------------------------*/
+
 
     public Usuario findUsuarioByTipoUsuarioAndUsername(String tipoUsuario, String username) {
 

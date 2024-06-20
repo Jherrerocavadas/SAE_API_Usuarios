@@ -29,31 +29,28 @@ public class AlunoService {
 
     //Converter DTO para entidade do banco de dados
     public Aluno alunoDtoToAluno(AlunoDTO alunoDTO) {
-        Aluno aluno = new Aluno();
-
-        aluno.setNumMatricula(alunoDTO.getNumMatricula());
-        aluno.setSemestre(alunoDTO.getSemestre());
-        aluno.setPercentualProgressao(alunoDTO.getPercentualProgressao());
-        aluno.setPercentualRendimento(alunoDTO.getPercentualRendimento());
-
-        aluno.setFaculdade(new Faculdade(alunoDTO.getFaculdadeId()));
-        aluno.setCurso(new Curso(alunoDTO.getCursoId()));
-        return aluno;
+        return Aluno.builder()
+                .numMatricula(alunoDTO.getNumMatricula())
+                .semestre(alunoDTO.getSemestre())
+                .percentualProgressao(alunoDTO.getPercentualProgressao())
+                .percentualRendimento(alunoDTO.getPercentualRendimento())
+                .faculdade(new Faculdade(alunoDTO.getFaculdadeId()))
+                .curso(new Curso(alunoDTO.getCursoId()))
+                .build();
     }
 
 
-    // Converter entidade do banco de dados para DTO
+    //TODO: CRIAR PACOTE DE CONVERTERS
+    /*----------------------------------------------- < DtoToEntity > ------------------------------------------------*/
     public AlunoDTO alunoToAlunoDto(Aluno aluno){
-        AlunoDTO alunoDTO = new AlunoDTO();
-
-        alunoDTO.setNumMatricula(aluno.getNumMatricula());
-        alunoDTO.setSemestre(aluno.getSemestre());
-        alunoDTO.setPercentualProgressao(aluno.getPercentualProgressao());
-        alunoDTO.setPercentualRendimento(aluno.getPercentualRendimento());
-
-        alunoDTO.setFaculdadeId(faculdadeService.faculdadeToFaculdadeDto(aluno.getFaculdade()).getId());
-        alunoDTO.setCursoId(cursoService.cursoToCursoDto(aluno.getCurso()).getId());
-        return alunoDTO;
+        return AlunoDTO.builder()
+                .numMatricula(aluno.getNumMatricula())
+                .semestre(aluno.getSemestre())
+                .percentualProgressao(aluno.getPercentualProgressao())
+                .percentualRendimento(aluno.getPercentualRendimento())
+                .faculdadeId(aluno.getFaculdade().getId())
+                .cursoId(aluno.getCurso().getId())
+                .build();
     }
 
     public DadosComplementaresAlunoDTO getDadosComplementaresAluno(Aluno aluno){

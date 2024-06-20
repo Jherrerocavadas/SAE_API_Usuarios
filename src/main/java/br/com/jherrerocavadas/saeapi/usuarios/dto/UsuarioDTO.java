@@ -15,7 +15,7 @@ public class UsuarioDTO {
     
     private Long numUsuario;
     private String nome;
-    private String login;
+    private String username;
     private String senha;
     private String email;
     private String tipoUsuario; // ALUNO, PROFESSOR, SECRETARIA/ADMINISTRATIVO
