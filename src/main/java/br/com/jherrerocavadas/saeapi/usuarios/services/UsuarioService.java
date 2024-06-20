@@ -46,6 +46,25 @@ public class UsuarioService {
         this.jwtService = jwtService;
     }
 
+    /*--------------------------------------------- < Login de usuário > ---------------------------------------------*/
+    public UsuarioLoginResponseDTO autenticarUsuario(LoginUsuarioRequestDTO loginUsuarioRequestDTO) {
+        Usuario usuario = usuarioRepository.findByUsernameAndSenha(
+                loginUsuarioRequestDTO.getUsername(),
+                loginUsuarioRequestDTO.getSenha()
+        );
+
+        return UsuarioLoginResponseDTO.builder()
+                .codigoUsuario(usuario.getNumUsuario())
+                .email(usuario.getEmail())
+                .tipoUsuario(usuario.getTipoUsuario().getTipoUsuario())
+                .fotoUsuario(Objects.nonNull(usuario.getFotoUsuario()) ? Base64.getEncoder().encodeToString(usuario.getFotoUsuario()) : null)
+                .nome(usuario.getNome())
+                .tokenJwt(jwtService.gerarToken(usuario))
+                .build();
+    }
+
+    /*--------------------------------------------- < Login de usuário > ---------------------------------------------*/
+
     public List<UsuarioDTO> findAllUsuariosDTO() {
 
         List<Usuario> usuarios = usuarioRepository.findAll();
@@ -133,19 +152,4 @@ public class UsuarioService {
 
     }
 
-    public UsuarioLoginResponseDTO autenticarUsuario(LoginUsuarioRequestDTO loginUsuarioRequestDTO) {
-        Usuario usuario = usuarioRepository.findByUsernameAndSenha(
-                loginUsuarioRequestDTO.getUsername(),
-                loginUsuarioRequestDTO.getSenha()
-        );
-
-        return UsuarioLoginResponseDTO.builder()
-                .codigoUsuario(usuario.getNumUsuario())
-                .email(usuario.getEmail())
-                .tipoUsuario(usuario.getTipoUsuario().getTipoUsuario())
-                .fotoUsuario(usuario.getFotoUsuario() != null ? Base64.getEncoder().encodeToString(usuario.getFotoUsuario()) : null)
-                .nome(usuario.getNome())
-                .tokenJwt(jwtService.gerarToken(usuario))
-                .build();
-    }
 }

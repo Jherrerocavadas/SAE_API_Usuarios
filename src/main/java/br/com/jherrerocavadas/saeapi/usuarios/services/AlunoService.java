@@ -25,7 +25,32 @@ public class AlunoService {
         this.usuarioService = usuarioService;
     }
 
-    //Converter DTO para entidade do banco de dados
+    /*--------------------------------------------- < Login de usuário > ---------------------------------------------*/
+    public UsuarioLoginResponseDTO autenticarAluno(LoginUsuarioRequestDTO loginUsuarioRequestDTO) {
+        UsuarioLoginResponseDTO loginResponseDTO = usuarioService.autenticarUsuario(loginUsuarioRequestDTO);
+        Aluno aluno = alunoRepository.findAlunoByUsuario(Usuario.builder().numUsuario(loginResponseDTO.getCodigoUsuario()).build());
+        loginResponseDTO.setDadosComplementares(this.getDadosComplementaresAluno(aluno));
+
+        return loginResponseDTO;
+
+
+    }
+
+    /*------------------------------------------- < Dados complementares > --------------------------------------------*/
+
+    public DadosComplementaresAlunoDTO getDadosComplementaresAluno(Aluno aluno){
+        return DadosComplementaresAlunoDTO.builder()
+                .numMatricula(aluno.getNumMatricula())
+                .semestre(aluno.getSemestre())
+                .percentualProgressao(aluno.getPercentualProgressao())
+                .percentualRendimento(aluno.getPercentualRendimento())
+                .faculdade(aluno.getFaculdade())
+                .curso(aluno.getCurso())
+                .build();
+    }
+
+    /*----------------------------------------------- < EntityToDTO > ------------------------------------------------*/
+
     public Aluno alunoDtoToAluno(AlunoDTO alunoDTO) {
         return Aluno.builder()
                 .numMatricula(alunoDTO.getNumMatricula())
@@ -51,16 +76,6 @@ public class AlunoService {
                 .build();
     }
 
-    public DadosComplementaresAlunoDTO getDadosComplementaresAluno(Aluno aluno){
-        return DadosComplementaresAlunoDTO.builder()
-                .numMatricula(aluno.getNumMatricula())
-                .semestre(aluno.getSemestre())
-                .percentualProgressao(aluno.getPercentualProgressao())
-                .percentualRendimento(aluno.getPercentualRendimento())
-                .faculdade(aluno.getFaculdade())
-                .curso(aluno.getCurso())
-                .build();
-    }
 
     /*------------------------------------------- < Ações no repository > --------------------------------------------*/
 
@@ -69,13 +84,12 @@ public class AlunoService {
         return alunoRepository.findById(numMatricula).orElse(null);
     }
 
-    public UsuarioLoginResponseDTO autenticarAluno(LoginUsuarioRequestDTO loginUsuarioRequestDTO) {
-        UsuarioLoginResponseDTO loginResponseDTO = usuarioService.autenticarUsuario(loginUsuarioRequestDTO);
-        Aluno aluno = alunoRepository.findAlunoByUsuario(Usuario.builder().numUsuario(loginResponseDTO.getCodigoUsuario()).build());
-        loginResponseDTO.setDadosComplementares(this.getDadosComplementaresAluno(aluno));
 
-        return loginResponseDTO;
+    public Aluno cadastrarAlunoPorUsuario(AlunoDTO alunoDTO, Long numUsuario){
 
-
+        Aluno aluno = this.alunoDtoToAluno(alunoDTO);
+        aluno.setUsuario(usuarioService.findUsuarioByNumUsuario(numUsuario));
+        aluno = alunoRepository.save(aluno); //Atualizar a entidade do aluno com o número da matrícula atribuido
+        return aluno;
     }
 }
