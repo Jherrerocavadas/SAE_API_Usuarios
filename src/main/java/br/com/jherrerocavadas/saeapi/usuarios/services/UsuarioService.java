@@ -5,8 +5,6 @@ import br.com.jherrerocavadas.saeapi.usuarios.dto.UsuarioLoginResponseDTO;
 import br.com.jherrerocavadas.saeapi.usuarios.dto.requests.LoginUsuarioRequestDTO;
 import br.com.jherrerocavadas.saeapi.usuarios.entity.DadosTipoUsuario;
 import br.com.jherrerocavadas.saeapi.usuarios.entity.Usuario;
-import br.com.jherrerocavadas.saeapi.usuarios.repository.AlunoRepository;
-import br.com.jherrerocavadas.saeapi.usuarios.repository.ProfessorRepository;
 import br.com.jherrerocavadas.saeapi.usuarios.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,30 +17,14 @@ import java.util.*;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
-
-    private final AlunoRepository alunoRepository;
-
-    private final AlunoService alunoService;
-    private final ProfessorRepository professorRepository;
-
-    private final ProfessorService professorService;
-
     private final JwtService jwtService;
 
 
 
     @Autowired
     private UsuarioService(UsuarioRepository usuarioRepository,
-                           AlunoRepository alunoRepository,
-                           AlunoService alunoService,
-                           ProfessorRepository professorRepository,
-                           ProfessorService professorService,
                            JwtService jwtService) {
         this.usuarioRepository = usuarioRepository;
-        this.alunoRepository = alunoRepository;
-        this.alunoService = alunoService;
-        this.professorRepository = professorRepository;
-        this.professorService = professorService;
         this.jwtService = jwtService;
     }
 
