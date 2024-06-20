@@ -12,8 +12,6 @@ import br.com.jherrerocavadas.saeapi.usuarios.repository.AlunoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class AlunoService {
 
@@ -64,18 +62,11 @@ public class AlunoService {
                 .build();
     }
 
+    /*------------------------------------------- < Ações no repository > --------------------------------------------*/
 
 
     public Aluno findById(Long numMatricula) {
-
-        Optional<Aluno> alunoOptional = alunoRepository.findById(numMatricula);
-
-        if(alunoOptional.isEmpty()){
-            return null;
-
-        }
-        return alunoOptional.get();
-
+        return alunoRepository.findById(numMatricula).orElse(null);
     }
 
     public UsuarioLoginResponseDTO autenticarAluno(LoginUsuarioRequestDTO loginUsuarioRequestDTO) {

@@ -13,10 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UsuarioService {
@@ -50,7 +47,6 @@ public class UsuarioService {
     }
 
     public List<UsuarioDTO> findAllUsuariosDTO() {
-
 
         List<Usuario> usuarios = usuarioRepository.findAll();
         List<UsuarioDTO> usuariosDTO = new ArrayList<>();
@@ -102,36 +98,39 @@ public class UsuarioService {
 
     public Usuario findUsuarioByTipoUsuarioAndUsername(String tipoUsuario, String username) {
 
-        return usuarioRepository.findByTipoUsuarioAndUsername(DadosTipoUsuario.builder().tipoUsuario(tipoUsuario).build(), username);
-
-
+        return usuarioRepository.findByTipoUsuarioAndUsername(
+                DadosTipoUsuario.builder()
+                        .tipoUsuario(tipoUsuario)
+                        .build(),
+                        username)
+                .orElseThrow(() -> new RuntimeException("usuario não encontrado!"));
 
     }
 
-    public Optional<Usuario> findUsuarioByNumUsuario(Long numUsuario) {
+    public Usuario findUsuarioByNumUsuario(Long numUsuario) {
 
-        return usuarioRepository.findById(numUsuario);
+        return usuarioRepository.findById(numUsuario)
+                .orElseThrow(() -> new RuntimeException("usuario não encontrado!"));
     }
 
+    //TODO: SALVAR SENHA PADRÃO PARA PRIMEIRO ACESSO
     public void salvarUsuario(UsuarioDTO usuarioDTO) {
         usuarioRepository.save(this.usuarioDtoToUsuario(usuarioDTO));
     }
 
     public String inserirFotoUsuario(MultipartFile fotoUsuario, Long numUsuario) {
-        Optional<Usuario> usuarioOptional = this.findUsuarioByNumUsuario(numUsuario);
-        if(usuarioOptional.isPresent()){
-            Usuario usuario = usuarioOptional.get();
+        Usuario usuario = this.findUsuarioByNumUsuario(numUsuario);
 
-            try {
-                usuario.setFotoUsuario(fotoUsuario.getBytes());
-                usuarioRepository.save(usuario);
-                return usuario.getFotoUsuario().toString();
-            } catch (IOException e) {
-                throw new RuntimeException("Erro ao fazer o encode do base64 da foto do usuário");
-            }
+        try {
+            usuario.setFotoUsuario(fotoUsuario.getBytes());
+            usuarioRepository.save(usuario);
+            return usuario.getFotoUsuario().toString();
+        } catch (IOException e) {
 
+            //TODO: TRATAR ESSA EXCEPTION CORRETAMENTE
+            throw new RuntimeException("Erro ao fazer o encode do base64 da foto do usuário");
         }
-        return "Sem foto, amigo";
+
     }
 
     public UsuarioLoginResponseDTO autenticarUsuario(LoginUsuarioRequestDTO loginUsuarioRequestDTO) {
